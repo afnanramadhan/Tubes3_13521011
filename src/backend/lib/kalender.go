@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"bufio"
+  	"os"
 )
 
 func isCalValid(text string) bool {
@@ -26,7 +28,7 @@ func isCalValid(text string) bool {
 	if(bulan<1 || bulan>12){
 		return false
 	}
-	if(tahun<0){
+	if(tahun<1){
 		return false
 	}
 
@@ -91,8 +93,10 @@ func isKabisat(tahun int) bool {
 }
 
 func main() {
-	var text string;
-	fmt.Scanln(&text)
+	scanner := bufio.NewScanner(os.Stdin)
+    scanner.Scan()
+    text := scanner.Text()
+
 	var regex, err = regexp.Compile(`[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4}`)
 
 	if err != nil {

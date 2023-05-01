@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
+	"bufio"
+  	"os"
 )
 
 func contains(arr []string, str string) bool {
@@ -127,20 +129,21 @@ func calculator(text string) {
 			}
 		}
 	}
-	fmt.Println(operand)
-	fmt.Println(angka)
+	// fmt.Println(operand)
+	// fmt.Println(angka)
 	var angkaFloat []float64
 	angkaFloat = converArrStrToFloat(angka)
-	fmt.Println(angkaFloat)
+	// fmt.Println(angkaFloat)
 
 	var result = findResult(operand, angkaFloat)
-	fmt.Println(result)
+	fmt.Println("Hasilnya adalah",result)
 }
 
 func main() {
-	var text string
-	fmt.Scanln(&text)
-	var regex, err = regexp.Compile(`^[-+]?[0-9]*\.?[0-9]+([-+*/]?([0-9]*\.?[0-9]+))*$`)
+	scanner := bufio.NewScanner(os.Stdin)
+    scanner.Scan()
+    text := scanner.Text()
+	var regex, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9]+([-+*/]?([0-9]*\.?[0-9]+))*$`)
 
 	if err != nil {
 		fmt.Println(err.Error())
