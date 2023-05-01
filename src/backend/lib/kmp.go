@@ -4,17 +4,17 @@ import (
 	"fmt"
 )
 
-func kmpMatch(input string, pat string) int {
+func kmpMatch(text string, pat string) int {
 	border := computeBorder(pat)
 	i := 0
 	j := 0
 	m := len(pat)
-	n := len(input)
+	n := len(text)
 
 	for i < n{
-		if input[i] == pat[j] {
+		if text[i] == pat[j] {
 			if j == m-1 {
-				return 0
+				return i-m+1
 			}
 			i++
 			j++
@@ -49,15 +49,16 @@ func computeBorder(pat string) []int  {
 
 func main()  {
 	text:= "ABCDEFGABCDFDF"
-	pat:= "ABCDF"
+	pat:= "BC"
 
 	fmt.Println("Text: ",text)
 	fmt.Println("Pattern: ",pat)
 	
 	temp:=(kmpMatch(text,pat))
-	if(temp==0){
-		fmt.Println("Matched")
-	}else{
+	fmt.Println("Index: ",temp)
+	if(temp==-1){
 		fmt.Println("Not Matched")
+	}else{
+		fmt.Println("Matched")
 	}
 }
