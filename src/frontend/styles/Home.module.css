@@ -1,0 +1,27 @@
+.column {
+  height: 100vh;
+  display: inline-block;
+}
+
+.sidebar {
+  background-color: #393E46;
+  width: 270px;
+}
+
+.home {
+  background-color: #393E46;
+  width: calc(100% - 270px);
+  height: 100vh;
+  display: inline-block;
+}
+
+.home-atas {
+  background-color: #393E46;
+  height: 600px;
+}
+
+.home-bawah {
+  display: block;
+  background-color: #21252a;
+  height: 50%;
+}
