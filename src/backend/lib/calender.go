@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
 )
 
-func IsCalValid(text string) bool {
+func IsDateValid(text string) bool {
 
 	kalender := strings.Split(text, "/")
 
@@ -64,14 +63,15 @@ func GetDay(text string) string {
 			kalender[2] = "0" + kalender[2]
 		}
 	}
-
-	date := fmt.Sprintf("%s-%s-%s", kalender[1], kalender[0], kalender[2])
-	fmt.Println(date)
-	t, err := time.Parse("01-02-2006", date)
-	if err != nil {
-		panic(err)
-	}
-	return t.Weekday().String()
+	year, _ := strconv.Atoi(kalender[2])
+	month, _ := strconv.Atoi(kalender[1])
+	day, _ := strconv.Atoi(kalender[0])
+	a := (14 - month) / 12
+	y := year - a
+	m := month + 12*a - 2
+	weekday := (day + y + y/4 - y/100 + y/400 + (31*m)/12) % 7
+	dayName := []string{"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"}[weekday]
+	return dayName
 
 }
 
@@ -100,8 +100,8 @@ func IsKabisat(tahun int) bool {
 // 	}
 
 // 	var hasil = regex.FindAllString(text, -1)
-// 	if IsCalValid(hasil[0]) {
-// 		fmt.Println(GetDay(hasil[0]))
+// 	if isDateValid(hasil[0]) {
+// 		fmt.Println("Hari", getDay(hasil[0]))
 // 	} else {
 // 		fmt.Println("Invalid Date")
 // 	}

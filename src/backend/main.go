@@ -1,45 +1,118 @@
 package main
 
 import (
-	"bufio"
+	// "bufio"
 	"database/sql"
 	"fmt"
 	"log"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 )
 
 var db *sql.DB
 
-type Album struct {
-	ID     int64
-	Title  string
-	Artist string
-	Price  float32
+// type Album struct {
+// 	ID     int64
+// 	Title  string
+// 	Artist string
+// 	Price  float32
+// }
+
+type Dataa struct {
+	id_data    int64
+	pertanyaan string
+	jawaban    string
+}
+
+type History struct {
+	id_history int64
+	pertanyaan string
+	jawaban    string
+}
+
+// func albumsByArtist() []Album {
+// 	var albums []Album
+
+// 	rows, _ := db.Query("SELECT * FROM album")
+
+// 	defer rows.Close()
+// 	for rows.Next() {
+// 		var alb Album
+// 		rows.Scan(&alb.ID, &alb.Title, &alb.Artist, &alb.Price)
+// 		albums = append(albums, alb)
+// 	}
+
+// 	return albums
+// }
+
+func getAllData() []Dataa {
+	var data []Dataa
+
+	rows, _ := db.Query("SELECT * FROM data")
+
+	defer rows.Close()
+	for rows.Next() {
+		var dataa Dataa
+		rows.Scan(&dataa.id_data, &dataa.pertanyaan, &dataa.jawaban)
+		data = append(data, dataa)
+	}
+
+	return data
+}
+
+// func getAllHistory() []History {
+// 	// An albums slice to hold data from returned rows.
+// 	var albums []History
+
+// 	rows, _ := db.Query("SELECT * FROM history")
+
+// 	defer rows.Close()
+// 	// Loop through rows, using Scan to assign column data to struct fields.
+// 	for rows.Next() {
+// 		var alb History
+// 		rows.Scan(&alb.id_history, &alb.pertanyaan, &alb.jawaban)
+// 		albums = append(albums, alb)
+// 	}
+
+// 	return albums
+// }
+
+// func read_file(namaFile string) []string {
+// 	file, err := os.Open(namaFile)
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+
+// 	defer file.Close()
+// 	scanner := bufio.NewScanner(file)
+
+// 	var isi []string
+// 	for scanner.Scan() {
+// 		isi = append(isi, scanner.Text())
+// 	}
+// 	return isi
+// }
+
+func getEnv(key string) string {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+	return os.Getenv(key)
+}
+
+func printData(data []Dataa) {
+	for i := 0; i < len(data); i++ {
+		fmt.Println(data[i])
+	}
 }
 
 func main() {
 
-	file, err := os.Open("sqlPrep.txt")
-	if err != nil {
-		panic(err.Error())
-	}
-
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
-
-	var isi [4]string
-	i := 0
-	for scanner.Scan() {
-		// do something with a line
-		isi[i] = scanner.Text()
-		i++
-	}
-
-	fmt.Println(len(isi))
-
-	db, err = sql.Open("mysql", isi[0]+":"+isi[1]+"@tcp(localhost:"+isi[2]+")/"+isi[3])
+	var err error
+	db, err = sql.Open("mysql", getEnv("DBUSER")+":"+getEnv("DBPASS")+"@tcp(localhost:"+getEnv("DBPORT")+")/"+getEnv("DBNAME"))
 	if err != nil {
 		panic(err.Error())
 	}
@@ -50,8 +123,8 @@ func main() {
 	}
 	fmt.Println("Connected!")
 
-	rows, _ := db.Query("SELECT * FROM album ")
-	defer rows.Close()
+	rows := getAllData()
+	printData(rows)
 
 	// main calculator
 	// 	scanner := bufio.NewScanner(os.Stdin)
