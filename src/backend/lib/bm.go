@@ -1,16 +1,7 @@
-package main
+package lib
 
-import "fmt"
-
-func main() {
-	fmt.Println("crazy brown fx", "own", find("crazy brown fx", "own"))
-	fmt.Println("crazy brown fox", "fox", find("crazy brown fox", "fox"))
-	fmt.Println("crazy brown fx", "fox", find("crazy brown fx", "fox"))
-	fmt.Println("crazy brown fox", "fx", find("crazy brown fox", "fx"))
-}
-
-// find the pattern in the text
-func find(text, pattern string) int {
+// BM the pattern in the text
+func BM(text, pattern string) int {
 	charTable := [256]int{}
 	// initialise default values for bad char table
 	for i := range charTable {
@@ -41,3 +32,10 @@ func find(text, pattern string) int {
 	// nothing has been found
 	return -1
 }
+
+// func main() {
+// 	fmt.Println("crazy brown fx", "own", BM("crazy brown fx", "own"))
+// 	fmt.Println("crazy brown fox", "fox", BM("crazy brown fox", "fox"))
+// 	fmt.Println("crazy brown fx", "fox", BM("crazy brown fx", "fox"))
+// 	fmt.Println("crazy brown fox", "fx", BM("crazy brown fox", "fx"))
+// }
