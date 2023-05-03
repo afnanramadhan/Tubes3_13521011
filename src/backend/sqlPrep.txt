@@ -1,4 +1,0 @@
-root
-
-3306
-recordings

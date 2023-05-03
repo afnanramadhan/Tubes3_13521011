@@ -1,14 +1,18 @@
 package main
 
 import (
-	// "bufio"
+	"backend/lib"
+	"bufio"
 	"database/sql"
 	"fmt"
 	"log"
+	"math"
 	"os"
+	"regexp"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
+	"github.com/texttheater/golang-levenshtein/levenshtein"
 )
 
 var db *sql.DB
@@ -62,6 +66,14 @@ func getAllData() []Dataa {
 	return data
 }
 
+func getPertanyaan(data []Dataa) []string {
+	var pertanyaan []string
+	for i := 0; i < len(data); i++ {
+		pertanyaan = append(pertanyaan, data[i].pertanyaan)
+	}
+	return pertanyaan
+}
+
 // func getAllHistory() []History {
 // 	// An albums slice to hold data from returned rows.
 // 	var albums []History
@@ -105,13 +117,31 @@ func getEnv(key string) string {
 
 func printData(data []Dataa) {
 	for i := 0; i < len(data); i++ {
-		fmt.Println(data[i])
+		fmt.Println("pertanyaan :", data[i].pertanyaan)
+		fmt.Println("jawaban :", data[i].jawaban)
 	}
+}
+
+func searchHighestPercentage(source string, listPertanyaan []string) (float64, int) {
+	var highest float64
+	var index int
+	for i := 0; i < len(listPertanyaan); i++ {
+		distance := levenshtein.DistanceForStrings([]rune(source), []rune(listPertanyaan[i]), levenshtein.DefaultOptions)
+		maxx := math.Max(float64(len(source)), float64(len(listPertanyaan[i])))
+		percentage := 100 - (float64(distance) / maxx * 100)
+		if percentage > highest {
+			highest = percentage
+			index = i
+		}
+	}
+	return highest, index
 }
 
 func main() {
 
 	var err error
+	var regexCalcu *regexp.Regexp
+	var regexCalen *regexp.Regexp
 	db, err = sql.Open("mysql", getEnv("DBUSER")+":"+getEnv("DBPASS")+"@tcp(localhost:"+getEnv("DBPORT")+")/"+getEnv("DBNAME"))
 	if err != nil {
 		panic(err.Error())
@@ -124,23 +154,38 @@ func main() {
 	fmt.Println("Connected!")
 
 	rows := getAllData()
-	printData(rows)
+	pertanyaan := getPertanyaan(rows)
+	// target := "apa ibukota indonsa"
 
-	// main calculator
-	// 	scanner := bufio.NewScanner(os.Stdin)
-	// 	scanner.Scan()
-	// 	text := scanner.Text()
-	// 	var regex, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9]+([-+*/]?([0-9]*\.?[0-9]+))*`)
-	// 	if err != nil {
-	// 		fmt.Println(err.Error())
-	// 	}
-	// 	var hasil = regex.FindAllString(text, -1)
-	// 	if len(hasil) == 0 {
-	// 		fmt.Println("Sintaks persamaan tidak sesuai")
-	// 	} else {
-	// 		fmt.Println(hasil[0])
-	// 		lib.Calculator(hasil[0])
-	// 	}
+	fmt.Println("Masukkan Pertanyaan :")
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	text := scanner.Text()
+
+	regexCalcu, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9]+([-+*/]?([0-9]*\.?[0-9]+))*`)
+	regexCalen, err = regexp.Compile(`[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4}`)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	var hasilCalcu = regexCalcu.FindAllString(text, -1)
+	var hasilCalen = regexCalen.FindAllString(text, -1)
+	if len(hasilCalen) != 0 {
+		fmt.Println("ini kalender")
+		if lib.IsDateValid(hasilCalen[0]) {
+			fmt.Println("Hari ",lib.GetDay(hasilCalen[0]))
+		} else {
+			fmt.Println("Invalid Date")
+		}
+	} else if len(hasilCalcu) != 0 {
+		fmt.Println("ini kalkulator")
+		fmt.Println(hasilCalcu[0])
+		lib.Calculator(hasilCalcu[0])
+	} else {
+		fmt.Println("ini pertanyaan")
+		percentage, index := searchHighestPercentage(text, pertanyaan)
+		fmt.Println(percentage, index)
+		fmt.Println(rows[index].jawaban)
+	}
 
 	// main kmp
 	// text := "ABCDEFGABCDFDF"
@@ -153,21 +198,6 @@ func main() {
 	// 	fmt.Println("Not Matched")
 	// } else {
 	// 	fmt.Println("Matched")
-	// }
-
-	// main kalender
-	// scanner := bufio.NewScanner(os.Stdin)
-	// scanner.Scan()
-	// text := scanner.Text()
-	// var regex, err = regexp.Compile(`[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4}`)
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// }
-	// var hasil = regex.FindAllString(text, -1)
-	// if lib.IsCalValid(hasil[0]) {
-	// 	fmt.Println(lib.GetDay(hasil[0]))
-	// } else {
-	// 	fmt.Println("Invalid Date")
 	// }
 
 	// main bm
