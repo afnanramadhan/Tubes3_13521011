@@ -23,6 +23,106 @@
 .TextBox input[placeholder] {
 padding-left: 20px;
 font-size: 17px;
-
 }
+
+.bubble {
+  bottom: 650px;
+  left: 580px;
+  text-align-last: left;
+  position: relative;
+  display: block;
+  background-color: #a2aabc;
+  border-radius: 15px;
+  padding: 10px 25px;
+  max-width: 100%;
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.4;
+  box-shadow: #a2aabc;
+  color: #393E46;
+  font-weight: bold;
+  word-wrap: break-word;
+}
+
+
+.bubble:hover::after{
+  transform: translateY(-5px);
+  border-color: transparent transparent transparent #FB8122}
+
+.bubble:hover {
+  transform: translateY(-5px);
+  background-color: #FB8122;
+}
+
+.me .bubble {
+  background-color: #a2aabc;
+  color: #fff;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+
+.me .bubble:before {
+  border-color: transparent #a2aabc transparent transparent;
+}
+
+.me .bubble:after {
+  border-color: transparent transparent transparent #a2aabc;
+}
+
+
+.answerBubble {
+  bottom: 650px;
+  left: -150px; /* changed from right: 550px */
+  text-align-last: left;
+  position: relative;
+  display: block;
+  background-color: #a2aabc;
+  border-radius: 15px;
+  padding: 10px 25px;
+  max-width: 100%;
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.4;
+  box-shadow: #a2aabc;
+  color: #393E46;
+  font-weight: bold;
+  word-wrap: break-word;
+}
+
+
+.answerBubble:hover {
+  transform: translateY(-5px);
+  background-color: #FB8122;
+}
+
+.answerBubble:hover::after{
+  transform: translateY(-5px);
+  border-color: transparent transparent transparent #FB8122}
+
+.bot .answerBubble {
+  background-color: #a2aabc;
+  color: #fff;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+}
+
+.bot .answerBubble:before {
+  border-color: transparent #a2aabc transparent transparent;
+}
+
+.bot .answerBubble:after {
+  border-color: transparent transparent transparent #a2aabc;
+}
+
+/* .container {
+  position: fixed;
+  top: 0;
+  left: -150px;
+  width: auto;
+  right: 0px;
+  margin: 0 auto;
+  left: 900px;
+  height: calc(100vh - 162px);
+  overflow-y: auto;
+  overflow-x: hidden;
+} */
+
 
