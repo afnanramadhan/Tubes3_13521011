@@ -1,13 +1,14 @@
 .sidebar {
-    width: 300px;
+    width: 270px;
     height: 100%;
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #1D2228;
+    background-color: #000000;
     overflow-x: hidden;
     padding-top: 20px;
     transition: all 0.3s ease-in-out;
+
   }
   
 .sidebar.show {
@@ -30,39 +31,40 @@ padding-bottom: 0px;
 }
 
 .sidebar button {
-    width: 260px;
+    width: 280px;
     height: 50px;
-    background-color: #1D2228;
+    background-color: #000000;
     color: #E1E2E2;
     font-size: 15px;
     padding: 10px;
     border: none;
     border-radius: 5px;
+    margin-bottom: 10px;
     text-align: left;
   }
 
 .sidebar button:hover {
-/* background-color: #393E46; */
+/* background-color: #404150; */
 color: #FB8122;
 transition: .7s;
 }
-
 .sidebar button:active,
 .sidebar button:focus {
-  color: #FB8122;
-  outline: none;
+  /* outline: none;
+  box-shadow: 0px 0px 5px #FFFFFF; */
+  color : #FB8122;
 }
   
 .sidebar ul li:first-child button.newButton {
-  width: 260px;
-  background-color: #1D2228;
+  width: 230px;
+  background-color: #0d0d0e;
   color: #E1E2E2;
   padding: 12px 16px;
   margin-bottom: 20px;
   font-size: 15px;
   text-align: left;
   display: block;
-  outline: 3px solid #E1E2E2;
+  outline: 1px solid #E1E2E2;
 }
 
 .sidebar ul li:first-child button.newButton:hover {

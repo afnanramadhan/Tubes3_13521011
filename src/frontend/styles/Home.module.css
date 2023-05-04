@@ -4,24 +4,17 @@
 }
 
 .sidebar {
-  background-color: #393E46;
+  background-color: #000000;
   width: 270px;
 }
 
 .home {
   background-color: #393E46;
+  background-image: url('https://i.pinimg.com/564x/c2/1a/c5/c21ac5785da58d10fbd37b467f5b2c85.jpg'); /* set the background image */
+  background-repeat: repeat-x; /* repeat the image vertically */
+  background-size: cover; /* don't repeat the image horizontally */
   width: calc(100% - 270px);
   height: 100vh;
   display: inline-block;
-}
-
-.home-atas {
-  background-color: #393E46;
-  height: 600px;
-}
-
-.home-bawah {
-  display: block;
-  background-color: #21252a;
-  height: 50%;
+  overflow-y: scroll;
 }
