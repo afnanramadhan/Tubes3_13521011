@@ -53,6 +53,19 @@ func SearchHighestPercentage(source string, listPertanyaan []string) (float64, i
 	}
 	return highest, index
 }
+
+func SearchSimilarQuestion(source string, listPertanyaan []string) []int {
+	var index []int
+	for i := 0; i < len(listPertanyaan); i++ {
+		distance := levenshtein.DistanceForStrings([]rune(source), []rune(listPertanyaan[i]), levenshtein.DefaultOptions)
+		maxx := math.Max(float64(len(source)), float64(len(listPertanyaan[i])))
+		percentage := 100 - (float64(distance) / maxx * 100)
+		if percentage > 40 {
+			index = append(index, i)
+		}
+	}
+	return index
+}
 func getEnv(key string) string {
 	err := godotenv.Load("models/.env")
 	if err != nil {
@@ -61,7 +74,31 @@ func getEnv(key string) string {
 	return os.Getenv(key)
 }
 
+func findKMP(text string, listPertanyaan []string) int {
+	var index int
+	for i := 0; i < len(listPertanyaan); i++ {
+		index = KmpMatch(text, listPertanyaan[i])
+		if index != -1 {
+			return i
+		}
+	}
+	return index
+}
+
+func findBM(text string, listPertanyaan []string) int {
+	var index int
+	for i := 0; i < len(listPertanyaan); i++ {
+		index = BM(text, listPertanyaan[i])
+		if index != -1 {
+			return i
+		}
+	}
+	return index
+}
+
 func Utama(text string) string {
+	text = text[1:len(text)]
+	fmt.Println(text)
 	var err error
 	var regexCalcu *regexp.Regexp
 	var regexCalen *regexp.Regexp
@@ -100,9 +137,43 @@ func Utama(text string) string {
 		return Calculator(hasilCalcu[0])
 	} else {
 		fmt.Println("ini pertanyaan")
-		percentage, index := SearchHighestPercentage(text, pertanyaan)
-		fmt.Println(percentage, index)
-		fmt.Println(rows[index].Jawaban)
-		return (rows[index].Jawaban)
+		var retVal int
+		if true {
+			retVal = findKMP(text, pertanyaan)
+			fmt.Println("Masuk KMP")
+		} else {
+			retVal = findBM(text, pertanyaan)
+			fmt.Println("Masuk BM")
+		}
+		fmt.Println(retVal)
+		if retVal == -1 {
+			fmt.Println("Masuk Levenshtein")
+			percentage, index := SearchHighestPercentage(text, pertanyaan)
+			fmt.Println(percentage)
+			if percentage < 41 {
+				return ("Maaf, saya tidak mengerti")
+			} else if percentage >= 41 && percentage < 80 {
+				mirip := SearchSimilarQuestion(text, pertanyaan)
+				retMirip := "Apakah maksud anda "
+				for i := 0; i < len(mirip); i++ {
+					if i == len(mirip)-1 {
+						retMirip += rows[mirip[i]].Pertanyaan + " ?"
+					} else {
+						retMirip += rows[mirip[i]].Pertanyaan + ", "
+
+					}
+				}
+				fmt.Println(retMirip)
+				return retMirip
+			} else {
+				fmt.Println(percentage, index)
+				fmt.Println(rows[index].Jawaban)
+				return (rows[index].Jawaban)
+			}
+		} else {
+			fmt.Println("langsung")
+			fmt.Println(rows[retVal].Jawaban)
+			return (rows[retVal].Jawaban)
+		}
 	}
 }

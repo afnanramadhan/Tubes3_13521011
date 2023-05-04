@@ -59,7 +59,7 @@ export const TextBox = () => {
       </div>
           {message.sender === "me" && lastSender === "bot" &&(
           <div className={`${styles.answerBubble} ${styles.bot}`}>
-            {botMessage[index].text}
+            <p>{botMessage[index].text}</p>
 
         </div>
       )}
