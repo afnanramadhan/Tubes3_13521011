@@ -2,6 +2,7 @@ package lib
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 )
 
@@ -101,33 +102,35 @@ func Calculator(text string) {
 		if text[i] == '+' || text[i] == '-' || text[i] == '*' || text[i] == '/' {
 			operand = append(operand, string(text[i]))
 		} else {
-			if i != len(text)-1 {
-				if count == 0 {
-					temp = string(text[i])
-					if text[i+1] == '+' || text[i+1] == '-' || text[i+1] == '*' || text[i+1] == '/' {
-						angka = append(angka, (temp))
-						temp = ""
-						count = 0
+			if text[i] != ' ' {
+				if i != len(text)-1 {
+					if count == 0 {
+						temp = string(text[i])
+						if text[i+1] == '+' || text[i+1] == '-' || text[i+1] == '*' || text[i+1] == '/' || text[i+1] == ' ' {
+							angka = append(angka, (temp))
+							temp = ""
+							count = 0
+						}
+						count++
+					} else {
+						temp = temp + string(text[i])
+						if text[i+1] == '+' || text[i+1] == '-' || text[i+1] == '*' || text[i+1] == '/' || text[i+1] == ' ' {
+							angka = append(angka, (temp))
+							temp = ""
+							count = 0
+						}
 					}
-					count++
 				} else {
 					temp = temp + string(text[i])
-					if text[i+1] == '+' || text[i+1] == '-' || text[i+1] == '*' || text[i+1] == '/' {
-						angka = append(angka, (temp))
-						temp = ""
-						count = 0
-					}
+					angka = append(angka, (temp))
+					temp = ""
+					count = 0
 				}
-			} else {
-				temp = temp + string(text[i])
-				angka = append(angka, (temp))
-				temp = ""
-				count = 0
 			}
 		}
 	}
-	// fmt.Println(operand)
-	// fmt.Println(angka)
+	fmt.Println(operand)
+	fmt.Println(angka)
 	var angkaFloat []float64
 	angkaFloat = ConverArrStrToFloat(angka)
 	// fmt.Println(angkaFloat)
@@ -136,11 +139,37 @@ func Calculator(text string) {
 	fmt.Println("Hasilnya adalah", result)
 }
 
+func FindPrefixCalculator(text string) string {
+	knowledge_base := map[string]string{
+		"Berapa hasil (.*)":    "X",
+		"(.*) hasilnya adalah": "X",
+		"(.*) berapa hasilnya": "X",
+		"Hasil dari (.*)":      "X",
+		"(.*)?":                "X",
+	}
+	notFound := "notFound"
+	for key, value := range knowledge_base {
+		m := regexp.MustCompile(key)
+		if m.MatchString(text) {
+			answer := value
+			len_groups := len(m.FindString(text))
+			if len_groups == 0 {
+				return answer
+			} else {
+				x := m.FindStringSubmatch(text)[1]
+				answer = regexp.MustCompile("X").ReplaceAllString(answer, x)
+				return answer
+			}
+		}
+	}
+	return notFound
+}
+
 // func main() {
 // 	scanner := bufio.NewScanner(os.Stdin)
 // 	scanner.Scan()
 // 	text := scanner.Text()
-// 	var regex, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9]+([-+*/]?([0-9]*\.?[0-9]+))*$`)
+// 	var regex, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9]+([-+*/]?([0-9]*\.?[0-9]+))*`)
 
 // 	if err != nil {
 // 		fmt.Println(err.Error())

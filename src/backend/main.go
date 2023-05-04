@@ -140,6 +140,8 @@ func searchHighestPercentage(source string, listPertanyaan []string) (float64, i
 func main() {
 
 	var err error
+	var textCalen string
+	var textCalcu string
 	var regexCalcu *regexp.Regexp
 	var regexCalen *regexp.Regexp
 	db, err = sql.Open("mysql", getEnv("DBUSER")+":"+getEnv("DBPASS")+"@tcp(localhost:"+getEnv("DBPORT")+")/"+getEnv("DBNAME"))
@@ -162,17 +164,20 @@ func main() {
 	scanner.Scan()
 	text := scanner.Text()
 
-	regexCalcu, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9]+([-+*/]?([0-9]*\.?[0-9]+))*`)
+	textCalen = lib.FindPrefixCalendar(text)
+	textCalcu = lib.FindPrefixCalculator(text)
+
+	regexCalcu, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9](\s?)+([-+*/]\s?([0-9]*\.?[0-9]+\s?))*`)
 	regexCalen, err = regexp.Compile(`[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4}`)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	var hasilCalcu = regexCalcu.FindAllString(text, -1)
-	var hasilCalen = regexCalen.FindAllString(text, -1)
+	var hasilCalcu = regexCalcu.FindAllString(textCalcu, -1)
+	var hasilCalen = regexCalen.FindAllString(textCalen, -1)
 	if len(hasilCalen) != 0 {
 		fmt.Println("ini kalender")
 		if lib.IsDateValid(hasilCalen[0]) {
-			fmt.Println("Hari ",lib.GetDay(hasilCalen[0]))
+			fmt.Println("Hari ", lib.GetDay(hasilCalen[0]))
 		} else {
 			fmt.Println("Invalid Date")
 		}
@@ -180,8 +185,13 @@ func main() {
 		fmt.Println("ini kalkulator")
 		fmt.Println(hasilCalcu[0])
 		lib.Calculator(hasilCalcu[0])
+	} else if lib.AddDatabase(text) != "notFound" {
+		fmt.Println(lib.AddDatabase(text))
+	} else if lib.RemoveDatabase(text) != "notFound" {
+		fmt.Println(lib.RemoveDatabase(text))
 	} else {
 		fmt.Println("ini pertanyaan")
+		text = lib.FindPrefixQ(text)
 		percentage, index := searchHighestPercentage(text, pertanyaan)
 		fmt.Println(percentage, index)
 		fmt.Println(rows[index].jawaban)

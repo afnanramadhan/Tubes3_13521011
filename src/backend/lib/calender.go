@@ -2,6 +2,7 @@ package lib
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -86,6 +87,32 @@ func IsKabisat(tahun int) bool {
 		return true
 	}
 	return false
+}
+
+func FindPrefixCalendar(text string) string {
+	knowledge_base := map[string]string{
+		"[H|h]ari apa (.*)":         "X",
+		"[H|h]ari apa tanggal (.*)": "X",
+		"(.*) hari apa":             "X",
+		"[T!t]anggal (.*) hari apa": "X",
+		"[H|h]ari (.*)":             "X",
+	}
+	notFound := "notFound"
+	for key, value := range knowledge_base {
+		m := regexp.MustCompile(key)
+		if m.MatchString(text) {
+			answer := value
+			len_groups := len(m.FindString(text))
+			if len_groups == 0 {
+				return answer
+			} else {
+				x := m.FindStringSubmatch(text)[1]
+				answer = regexp.MustCompile("X").ReplaceAllString(answer, x)
+				return answer
+			}
+		}
+	}
+	return notFound
 }
 
 // func main() {
