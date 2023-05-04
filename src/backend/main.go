@@ -140,8 +140,6 @@ func searchHighestPercentage(source string, listPertanyaan []string) (float64, i
 func main() {
 
 	var err error
-	var textCalen string
-	var textCalcu string
 	var regexCalcu *regexp.Regexp
 	var regexCalen *regexp.Regexp
 	db, err = sql.Open("mysql", getEnv("DBUSER")+":"+getEnv("DBPASS")+"@tcp(localhost:"+getEnv("DBPORT")+")/"+getEnv("DBNAME"))
@@ -164,10 +162,10 @@ func main() {
 	scanner.Scan()
 	text := scanner.Text()
 
-	textCalen = lib.FindPrefixCalendar(text)
-	textCalcu = lib.FindPrefixCalculator(text)
+	var textCalen = lib.FindPrefixCalendar(text)
+	var textCalcu = lib.FindPrefixCalculator(text)
 
-	regexCalcu, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9](\s?)+([-+*/]\s?([0-9]*\.?[0-9]+\s?))*`)
+	regexCalcu, err = regexp.Compile(`[\(]?[-+]?\d*\.?\d+[\)]?\s*([-+*/](\s?)[\(]?\s*\d*\.?\d+[\)]?\s*)*`)
 	regexCalen, err = regexp.Compile(`[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4}`)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -181,7 +179,7 @@ func main() {
 		} else {
 			fmt.Println("Invalid Date")
 		}
-	} else if len(hasilCalcu) != 0 {
+	} else if len(hasilCalcu) == 1 {
 		fmt.Println("ini kalkulator")
 		fmt.Println(hasilCalcu[0])
 		lib.Calculator(hasilCalcu[0])

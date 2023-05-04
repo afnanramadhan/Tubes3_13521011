@@ -24,6 +24,15 @@ func IndexOf(arr []string, str string) int {
 	return -1
 }
 
+func LastIndexOf(arr []string, val string) int {
+	for i := len(arr) - 1; i >= 0; i-- {
+		if arr[i] == val {
+			return i
+		}
+	}
+	return -1
+}
+
 func ConverArrStrToFloat(arr []string) []float64 {
 	var arrFloat []float64
 	var temp float64
@@ -34,62 +43,147 @@ func ConverArrStrToFloat(arr []string) []float64 {
 	return arrFloat
 }
 
+func bracketValidation(operand []string) bool {
+	var open, close int
+	for i := 0; i < len(operand); i++ {
+		if operand[i] == "(" {
+			open++
+		} else if operand[i] == ")" {
+			close++
+		}
+	}
+	if open >= close {
+		return true
+	} else {
+		return false
+	}
+}
+
+func addCloseBracket(operand []string) []string {
+	var open, close int
+	for i := 0; i < len(operand); i++ {
+		if operand[i] == "(" {
+			open++
+		} else if operand[i] == ")" {
+			close++
+		}
+	}
+	for i := 0; i < open-close; i++ {
+		operand = append(operand, ")")
+	}
+	return operand
+}
+
+func findIndexCloseBracket(operand []string, IndexOpenBracket int) int {
+	var open, close int
+	for i := IndexOpenBracket; i < len(operand); i++ {
+		if operand[i] == "(" {
+			open++
+		} else if operand[i] == ")" {
+			close++
+		}
+		if open == close {
+			return i
+		}
+	}
+	return -1
+}
+
+func CountBracketBefore(operand []string, IndexOpenBracket int) int {
+	var open, close int
+	for i := 0; i < IndexOpenBracket; i++ {
+		if operand[i] == "(" {
+			open++
+		} else if operand[i] == ")" {
+			close++
+		}
+	}
+	return open + close
+}
+
 func FindResult(operand []string, angka []float64) float64 {
 	var result float64
 	var idx int
-	for len(operand) != 0 {
-		idxp := IndexOf(operand, "+")
-		idxs := IndexOf(operand, "-")
-		idxm := IndexOf(operand, "*")
-		idxd := IndexOf(operand, "/")
 
-		if idxp < idxs && idxp > -1 {
-			if Contains(operand, "-") {
-				idx = IndexOf(operand, "-")
-				result = angka[idx] - angka[idx+1]
-			}
-			if Contains(operand, "+") {
-				idx = IndexOf(operand, "+")
-				result = angka[idx] + angka[idx+1]
-			}
-		} else {
-			if Contains(operand, "+") {
-				idx = IndexOf(operand, "+")
-				result = angka[idx] + angka[idx+1]
-			}
-			if Contains(operand, "-") {
-				idx = IndexOf(operand, "-")
-				result = angka[idx] - angka[idx+1]
-			}
+	if bracketValidation(operand) == false {
+		return -999999
+	} else {
+		operand = addCloseBracket(operand)
+
+		// handle brackets recursively
+		for Contains(operand, "(") {
+			idxopen := LastIndexOf(operand, "(")
+			idxclose := findIndexCloseBracket(operand, idxopen)
+			fmt.Printf("idxopen: %v, idxclose: %v\n", idxopen, idxclose)
+
+			operandIn := operand[idxopen+1 : idxclose]
+			idxangka := idxopen - CountBracketBefore(operand, idxopen)
+			angkaIn := angka[idxangka : idxangka+(idxclose-idxopen)]
+			fmt.Printf("operandIn: %v, angkaIn: %v\n", operandIn, angkaIn)
+
+			result := FindResult(operandIn, angkaIn)
+			fmt.Printf("subResult: %v\n", result)
+			operand = append(operand[:idxopen], operand[idxclose+1:]...)
+			angka = append(angka[:idxangka+1], angka[idxangka+(idxclose-idxopen):]...)
+			fmt.Printf("operand: %v, angka: %v, subResult: %v\n", operand, angka, result)
+			angka[idxangka] = result
 		}
 
-		if idxm < idxd && idxm > -1 {
-			if Contains(operand, "/") {
-				idx = IndexOf(operand, "/")
-				result = angka[idx] / angka[idx+1]
-			}
-			if Contains(operand, "*") {
-				idx = IndexOf(operand, "*")
-				result = angka[idx] * angka[idx+1]
+		// handle remaining operations
+		for len(operand) != 0 {
+			idxp := IndexOf(operand, "+")
+			idxs := IndexOf(operand, "-")
+			idxm := IndexOf(operand, "*")
+			idxd := IndexOf(operand, "/")
 
+			if idxp < idxs && idxp > -1 {
+				if Contains(operand, "-") {
+					idx = IndexOf(operand, "-")
+					result = angka[idx] - angka[idx+1]
+				}
+				if Contains(operand, "+") {
+					idx = IndexOf(operand, "+")
+					result = angka[idx] + angka[idx+1]
+				}
+			} else {
+				if Contains(operand, "+") {
+					idx = IndexOf(operand, "+")
+					result = angka[idx] + angka[idx+1]
+				}
+				if Contains(operand, "-") {
+					idx = IndexOf(operand, "-")
+					result = angka[idx] - angka[idx+1]
+				}
 			}
-		} else {
-			if Contains(operand, "*") {
-				idx = IndexOf(operand, "*")
-				result = angka[idx] * angka[idx+1]
 
+			if idxm < idxd && idxm > -1 {
+				if Contains(operand, "/") {
+					idx = IndexOf(operand, "/")
+					result = angka[idx] / angka[idx+1]
+				}
+				if Contains(operand, "*") {
+					idx = IndexOf(operand, "*")
+					result = angka[idx] * angka[idx+1]
+
+				}
+			} else {
+				if Contains(operand, "*") {
+					idx = IndexOf(operand, "*")
+					result = angka[idx] * angka[idx+1]
+
+				}
+				if Contains(operand, "/") {
+					idx = IndexOf(operand, "/")
+					result = angka[idx] / angka[idx+1]
+				}
 			}
-			if Contains(operand, "/") {
-				idx = IndexOf(operand, "/")
-				result = angka[idx] / angka[idx+1]
-			}
+			operand = append(operand[:idx], operand[idx+1:]...)
+			angka = append(angka[:idx+1], angka[idx+2:]...)
+			angka[idx] = result
+			// fmt.Printf("operand: %v, angka: %v, subResult: %v\n", operand, angka, result)
 		}
-		operand = append(operand[:idx], operand[idx+1:]...)
-		angka = append(angka[:idx+1], angka[idx+2:]...)
-		angka[idx] = result
+		return angka[0]
 	}
-	return result
-
 }
 
 func Calculator(text string) {
@@ -97,16 +191,17 @@ func Calculator(text string) {
 	angka := []string{}
 	var temp string
 	count := 0
+	operation := []string{"+", "-", "*", "/", "(", ")"}
 
 	for i := 0; i < len(text); i++ {
-		if text[i] == '+' || text[i] == '-' || text[i] == '*' || text[i] == '/' {
+		if Contains(operation, string(text[i])) {
 			operand = append(operand, string(text[i]))
 		} else {
 			if text[i] != ' ' {
 				if i != len(text)-1 {
 					if count == 0 {
 						temp = string(text[i])
-						if text[i+1] == '+' || text[i+1] == '-' || text[i+1] == '*' || text[i+1] == '/' || text[i+1] == ' ' {
+						if Contains(operation, string(text[i+1])) || text[i+1] == ' ' {
 							angka = append(angka, (temp))
 							temp = ""
 							count = 0
@@ -114,7 +209,7 @@ func Calculator(text string) {
 						count++
 					} else {
 						temp = temp + string(text[i])
-						if text[i+1] == '+' || text[i+1] == '-' || text[i+1] == '*' || text[i+1] == '/' || text[i+1] == ' ' {
+						if Contains(operation, string(text[i+1])) || text[i+1] == ' ' {
 							angka = append(angka, (temp))
 							temp = ""
 							count = 0
