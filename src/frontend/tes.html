@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GPT Form</title>
+  </head>
+  <body>
+    <h1>GPT Form</h1>
+    <form id="gptForm">
+      <label for="pertanyaan">Pertanyaan:</label><br>
+      <input type="text" id="pertanyaan" name="pertanyaan"><br>
+      <label for="jawaban">Jawaban:</label><br>
+      <input type="text" id="jawaban" name="jawaban"><br><br>
+      <input type="submit" value="Tambah">
+    </form> 
+    <script>
+      document.getElementById("gptForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/product");
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify({
+          pertanyaan: document.getElementById("pertanyaan").value,
+          jawaban: document.getElementById("jawaban").value
+        }));
+      });
+    </script>
+  </body>
+</html>

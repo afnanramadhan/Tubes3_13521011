@@ -1,14 +1,11 @@
-package main
+package lib
 
 import (
 	"fmt"
-	"regexp"
 	"strconv"
-	"bufio"
-  	"os"
 )
 
-func contains(arr []string, str string) bool {
+func Contains(arr []string, str string) bool {
 	for _, a := range arr {
 		if a == str {
 			return true
@@ -17,7 +14,7 @@ func contains(arr []string, str string) bool {
 	return false
 }
 
-func indexOf(arr []string, str string) int {
+func IndexOf(arr []string, str string) int {
 	for i, a := range arr {
 		if a == str {
 			return i
@@ -26,7 +23,7 @@ func indexOf(arr []string, str string) int {
 	return -1
 }
 
-func converArrStrToFloat(arr []string) []float64 {
+func ConverArrStrToFloat(arr []string) []float64 {
 	var arrFloat []float64
 	var temp float64
 	for i := 0; i < len(arr); i++ {
@@ -36,53 +33,53 @@ func converArrStrToFloat(arr []string) []float64 {
 	return arrFloat
 }
 
-func findResult(operand []string, angka []float64) float64 {
+func FindResult(operand []string, angka []float64) float64 {
 	var result float64
 	var idx int
 	for len(operand) != 0 {
-		idxp := indexOf(operand, "+")
-		idxs := indexOf(operand, "-")
-		idxm := indexOf(operand, "*")
-		idxd := indexOf(operand, "/")
+		idxp := IndexOf(operand, "+")
+		idxs := IndexOf(operand, "-")
+		idxm := IndexOf(operand, "*")
+		idxd := IndexOf(operand, "/")
 
 		if idxp < idxs && idxp > -1 {
-			if contains(operand, "-") {
-				idx = indexOf(operand, "-")
+			if Contains(operand, "-") {
+				idx = IndexOf(operand, "-")
 				result = angka[idx] - angka[idx+1]
 			}
-			if contains(operand, "+") {
-				idx = indexOf(operand, "+")
+			if Contains(operand, "+") {
+				idx = IndexOf(operand, "+")
 				result = angka[idx] + angka[idx+1]
 			}
 		} else {
-			if contains(operand, "+") {
-				idx = indexOf(operand, "+")
+			if Contains(operand, "+") {
+				idx = IndexOf(operand, "+")
 				result = angka[idx] + angka[idx+1]
 			}
-			if contains(operand, "-") {
-				idx = indexOf(operand, "-")
+			if Contains(operand, "-") {
+				idx = IndexOf(operand, "-")
 				result = angka[idx] - angka[idx+1]
 			}
 		}
 
 		if idxm < idxd && idxm > -1 {
-			if contains(operand, "/") {
-				idx = indexOf(operand, "/")
+			if Contains(operand, "/") {
+				idx = IndexOf(operand, "/")
 				result = angka[idx] / angka[idx+1]
 			}
-			if contains(operand, "*") {
-				idx = indexOf(operand, "*")
+			if Contains(operand, "*") {
+				idx = IndexOf(operand, "*")
 				result = angka[idx] * angka[idx+1]
 
 			}
 		} else {
-			if contains(operand, "*") {
-				idx = indexOf(operand, "*")
+			if Contains(operand, "*") {
+				idx = IndexOf(operand, "*")
 				result = angka[idx] * angka[idx+1]
 
 			}
-			if contains(operand, "/") {
-				idx = indexOf(operand, "/")
+			if Contains(operand, "/") {
+				idx = IndexOf(operand, "/")
 				result = angka[idx] / angka[idx+1]
 			}
 		}
@@ -94,7 +91,7 @@ func findResult(operand []string, angka []float64) float64 {
 
 }
 
-func calculator(text string) {
+func Calculator(text string) string{
 	operand := []string{}
 	angka := []string{}
 	var temp string
@@ -129,30 +126,27 @@ func calculator(text string) {
 			}
 		}
 	}
-	// fmt.Println(operand)
-	// fmt.Println(angka)
 	var angkaFloat []float64
-	angkaFloat = converArrStrToFloat(angka)
-	// fmt.Println(angkaFloat)
+	angkaFloat = ConverArrStrToFloat(angka)
 
-	var result = findResult(operand, angkaFloat)
-	fmt.Println("Hasilnya adalah",result)
+	var result = FindResult(operand, angkaFloat)
+	return ("Hasilnya adalah " + fmt.Sprintf("%.2f", result))
 }
 
-func main() {
-	scanner := bufio.NewScanner(os.Stdin)
-    scanner.Scan()
-    text := scanner.Text()
-	var regex, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9]+([-+*/]?([0-9]*\.?[0-9]+))*$`)
+// func main() {
+// 	scanner := bufio.NewScanner(os.Stdin)
+// 	scanner.Scan()
+// 	text := scanner.Text()
+// 	var regex, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9]+([-+*/]?([0-9]*\.?[0-9]+))*$`)
 
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	var hasil = regex.FindAllString(text, -1)
-	if len(hasil) == 0 {
-		fmt.Println("Sintaks persamaan tidak sesuai")
-	} else {
-		fmt.Println(hasil[0])
-		calculator(hasil[0])
-	}
-}
+// 	if err != nil {
+// 		fmt.Println(err.Error())
+// 	}
+// 	var hasil = regex.FindAllString(text, -1)
+// 	if len(hasil) == 0 {
+// 		fmt.Println("Sintaks persamaan tidak sesuai")
+// 	} else {
+// 		fmt.Println(hasil[0])
+// 		calculator(hasil[0])
+// 	}
+// }

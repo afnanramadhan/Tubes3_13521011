@@ -1,22 +1,45 @@
 import React, { useState } from 'react';
 import styles from '../styles/TextBox.module.css';
+import axios from 'axios';
 
 export const TextBox = () => {
   const [text, setText] = useState('');
   const [messages, setMessages] = useState([]);
   const [lastSender, setLastSender] = useState("");
+  const [botMessage, setBotMessage] = useState([]);
 
   const handleTextChange = (event) => {
     setText(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (text.trim() !== "") {
       setMessages([...messages, { text, sender: "me" }]);
       setText("");
       setLastSender("me");
     }
+    console.log(text.trim());
+    try{
+      const response = await axios.get(`http://localhost:8080/api/product/${text.trim()}`);
+      const dataa = response.data.product;
+      console.log(dataa)
+      if (dataa){
+        const nbotMessage = {text : dataa, sender: "bot"};
+        setBotMessage([...botMessage, nbotMessage]);
+        console.log(nbotMessage);
+        console.log(botMessage);
+        setLastSender("bot");
+      }
+    }
+    catch(error){
+      console.log(error);
+      const nbotMessage = {text : "Maaf, saya tidak mengerti", sender: "bot"};
+      setBotMessage([...botMessage, nbotMessage]);
+      setLastSender("bot");
+    }
+    
+
   };
   
 
@@ -34,9 +57,10 @@ export const TextBox = () => {
             <div className={styles.arrow} />
           )}
       </div>
-          {message.sender === "me" && (
+          {message.sender === "me" && lastSender === "bot" &&(
           <div className={`${styles.answerBubble} ${styles.bot}`}>
-          ada yang bisa saya bantu?
+            {botMessage[index].text}
+
         </div>
       )}
     </div>
