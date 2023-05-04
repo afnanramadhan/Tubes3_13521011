@@ -100,8 +100,13 @@ func Utama(text string) string {
 	text = text[1:len(text)]
 	fmt.Println(text)
 	var err error
+	var textCalen string
+	var textCalcu string
 	var regexCalcu *regexp.Regexp
 	var regexCalen *regexp.Regexp
+
+	textCalen = FindPrefixCalendar(text)
+	textCalcu = FindPrefixCalculator(text)
 	regexCalcu, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9]+([-+*/]?([0-9]*\.?[0-9]+))*`)
 	regexCalen, err = regexp.Compile(`[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4}`)
 	if err != nil {
@@ -121,8 +126,8 @@ func Utama(text string) string {
 
 	rows := GetAllData()
 	pertanyaan := GetPertanyaan(rows)
-	var hasilCalcu = regexCalcu.FindAllString(text, -1)
-	var hasilCalen = regexCalen.FindAllString(text, -1)
+	var hasilCalcu = regexCalcu.FindAllString(textCalcu, -1)
+	var hasilCalen = regexCalen.FindAllString(textCalen, -1)
 	if len(hasilCalen) != 0 {
 		fmt.Println("ini kalender")
 		if IsDateValid(hasilCalen[0]) {
@@ -135,6 +140,12 @@ func Utama(text string) string {
 		fmt.Println(hasilCalcu[0])
 		fmt.Println(Calculator(hasilCalcu[0]))
 		return Calculator(hasilCalcu[0])
+	}else if AddDatabase(text) != "notFound" {
+		fmt.Println(AddDatabase(text))
+		return AddDatabase(text)
+	} else if RemoveDatabase(text) != "notFound" {
+		fmt.Println(RemoveDatabase(text))
+		return RemoveDatabase(text)
 	} else {
 		fmt.Println("ini pertanyaan")
 		var retVal int
@@ -176,4 +187,5 @@ func Utama(text string) string {
 			return (rows[retVal].Jawaban)
 		}
 	}
+	return "Invalid"
 }

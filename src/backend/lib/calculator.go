@@ -2,6 +2,7 @@ package lib
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 )
 
@@ -91,7 +92,7 @@ func FindResult(operand []string, angka []float64) float64 {
 
 }
 
-func Calculator(text string) string{
+func Calculator(text string) string {
 	operand := []string{}
 	angka := []string{}
 	var temp string
@@ -131,6 +132,32 @@ func Calculator(text string) string{
 
 	var result = FindResult(operand, angkaFloat)
 	return ("Hasilnya adalah " + fmt.Sprintf("%.2f", result))
+}
+
+func FindPrefixCalculator(text string) string {
+	knowledge_base := map[string]string{
+		"Berapa hasil (.*)":    "X",
+		"(.*) hasilnya adalah": "X",
+		"(.*) berapa hasilnya": "X",
+		"Hasil dari (.*)":      "X",
+		"(.*)?":                "X",
+	}
+	notFound := "notFound"
+	for key, value := range knowledge_base {
+		m := regexp.MustCompile(key)
+		if m.MatchString(text) {
+			answer := value
+			len_groups := len(m.FindString(text))
+			if len_groups == 0 {
+				return answer
+			} else {
+				x := m.FindStringSubmatch(text)[1]
+				answer = regexp.MustCompile("X").ReplaceAllString(answer, x)
+				return answer
+			}
+		}
+	}
+	return notFound
 }
 
 // func main() {
