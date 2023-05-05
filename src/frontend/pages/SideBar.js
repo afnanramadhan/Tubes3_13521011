@@ -31,17 +31,18 @@ export const SideBar = () => {
     } catch (error) {
       console.error(error);
     }
-    // console.log(response);
   };
+
+  const handleAddButton = () => {
+    window.location.reload();
+  }
+
 
   return (
     <div className={sidebar.sidebar}>
       <div className={sidebar.sidebarTop}>
         <ul>
-          <li><button className={sidebar.newButton}>+ New Chat</button></li>
-          <li><button>histori 1</button></li>
-          <li><button>histori 2</button></li>
-          <li><button>histori 3</button></li>
+          <li><button className={sidebar.newButton} onClick={handleAddButton}>+ New Chat</button></li>
         </ul>
       </div>
       <div className={sidebar.sidebarBottom}>
