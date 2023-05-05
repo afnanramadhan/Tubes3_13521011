@@ -39,9 +39,6 @@ List the ready features here:
 
 ## Usage
 ### Alternativ 1: 
-- Buka [link vercel app ini](https://tubes3-13521056-fe.vercel.app/)
-#### nb: apabila terdapat kegagalan/kejanggalan pada hosting baik pada back-end, front-end atau database, harap gunakan alternativ 2.
-### Alternativ 2:
 - Clone repository / download zip dari repository dari link yang ada pada lampiran
 - Pastikan anda sudah menginstall Golang
 - Masukkan file dump sql ke dalam database lokal yang ada pada device Anda dan atur file .env yang ada pada folder src/backend/models sehingga sesuai dengan database lokal Anda
