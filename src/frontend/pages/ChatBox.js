@@ -1,20 +1,32 @@
 import { useState, useEffect, useRef } from 'react';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 
 import styles from '../styles/ChatBox.module.css';
 
+const bot = [];
 export function ChatBox() {
   const [messages, setMessages] = useState([]);
   const messageContainerRef = useRef(null);
+  const [botMessage, setBotMessage] = useState([]);
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
     const inputEl = e.target.elements.message;
     const message = inputEl.value.trim();
     if (message) {
       setMessages([...messages, { sender: 'me', message }]);
       inputEl.value = '';
+      const response = await axios.get(`http://localhost:8080/api/product/${message}`);
+      const dataa = response.data.product;
+      console.log(dataa);
+      if (dataa){
+        setBotMessage([...botMessage, { sender: 'me', dataa }]);
+        bot.push(dataa);
+        console.log(botMessage);
+        console.log(message);
+      }
     }
   };
 
@@ -36,8 +48,8 @@ export function ChatBox() {
               <div className={`${styles.bubble} ${msg.sender === 'me' ? styles.right : styles.left}`}>
                 {msg.message}
               </div>
-              <div className={`${styles.bubble} ${msg.sender === 'me' ? styles.left:styles.right}`}>
-                gw males jawab chat lu
+              <div key={idx} className={`${styles.bubble} ${msg.sender === 'me' ? styles.left:styles.right}`}>
+                {bot[idx]}
               </div>
             </div>
           ))}
