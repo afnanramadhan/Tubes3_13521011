@@ -10,9 +10,9 @@
 
 .home {
   background-color: #393E46;
-  background-image: url('https://i.pinimg.com/564x/c2/1a/c5/c21ac5785da58d10fbd37b467f5b2c85.jpg'); /* set the background image */
-  background-repeat: repeat-x; /* repeat the image vertically */
-  background-size: cover; /* don't repeat the image horizontally */
+  background-image: url('https://i.pinimg.com/564x/d7/a6/11/d7a61190a836bdcfc62bf97af4f4c74b.jpg'); 
+  background-repeat: repeat-x; 
+  background-size: cover; 
   width: calc(100% - 270px);
   height: 100vh;
   display: inline-block;
