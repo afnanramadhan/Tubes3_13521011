@@ -1,7 +1,5 @@
 # Tubes 3 IF2211 STRATEGI ALGORITMA
 > Aplikasi Chat GPT Sederhana dengan Menerapkan Algoritma String Matching
-> Live demo [_here_](https://www.example.com). <br>
-> App [_here_](https://tubes3-13521056-fe.vercel.app/)
 
 ## Table of Contents
 * [General Info](#general-information)
