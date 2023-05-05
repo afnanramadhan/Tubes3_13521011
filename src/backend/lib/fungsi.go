@@ -1,6 +1,7 @@
 package lib
 
 import (
+	// "backend/controller"
 	"fmt"
 	"log"
 	"math"
@@ -71,18 +72,16 @@ func findBM(text string, listPertanyaan []string) int {
 	return index
 }
 
-func Utama(text string) string {
+func Utama(text string, val bool) string {
 	text = text[1:len(text)]
 	fmt.Println(text)
 	var err error
-	var textCalen string
-	var textCalcu string
 	var regexCalcu *regexp.Regexp
 	var regexCalen *regexp.Regexp
 
-	textCalen = FindPrefixCalendar(text)
-	textCalcu = FindPrefixCalculator(text)
-	regexCalcu, err = regexp.Compile(`[-+]?[0-9]*\.?[0-9]+([-+*/]?([0-9]*\.?[0-9]+))*`)
+	var textCalen = FindPrefixCalendar(text)
+	var textCalcu = FindPrefixCalculator(text)
+	regexCalcu, err = regexp.Compile(`[\(]?[-+]?\d*\.?\d+[\)]?\s*([-+*/](\s?)[\(]?\s*\d*\.?\d+[\)]?\s*)*`)
 	regexCalen, err = regexp.Compile(`[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4}`)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -110,7 +109,7 @@ func Utama(text string) string {
 		} else {
 			return ("Invalid Date")
 		}
-	} else if len(hasilCalcu) != 0 {
+	} else if len(hasilCalcu) == 1 {
 		fmt.Println("ini kalkulator")
 		fmt.Println(hasilCalcu[0])
 		fmt.Println(Calculator(hasilCalcu[0]))
@@ -125,7 +124,7 @@ func Utama(text string) string {
 		fmt.Println("ini pertanyaan")
 		text = FindPrefixQ(text)
 		var retVal int
-		if true {
+		if !val {
 			retVal = findKMP(text, pertanyaan)
 			fmt.Println("Masuk KMP")
 		} else {
