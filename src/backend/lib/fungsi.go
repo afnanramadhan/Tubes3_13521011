@@ -117,7 +117,7 @@ func Utama(text string, val bool) string {
 
 	var textCalen = FindPrefixCalendar(text)
 	var textCalcu = FindPrefixCalculator(text)
-	regexCalcu, err = regexp.Compile(`[\(]?[-+]?\d*\.?\d+[\)]?\s*([-+*/](\s?)[\(]?\s*\d*\.?\d+[\)]?\s*)*`)
+	regexCalcu, err = regexp.Compile(`[\(]?[-+]?\d*\.?\d+[\)]?\s*([-+*/](\s?)[\(]*?\s*\d*\.?\d+[\)]?\s*)*`)
 	regexCalen, err = regexp.Compile(`[0-9]{1,2}/[0-9]{1,2}/[0-9]{1,4}`)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -145,11 +145,15 @@ func Utama(text string, val bool) string {
 		} else {
 			return ("Invalid Date")
 		}
-	} else if len(hasilCalcu) == 1 {
-		fmt.Println("ini kalkulator")
-		fmt.Println(hasilCalcu[0])
-		fmt.Println(Calculator(hasilCalcu[0]))
-		return Calculator(hasilCalcu[0])
+	} else if len(hasilCalcu) != 0 {
+		if len(hasilCalcu) == 1 {
+			fmt.Println("ini kalkulator")
+			fmt.Println(hasilCalcu[0])
+			fmt.Println(Calculator(hasilCalcu[0]))
+			return Calculator(hasilCalcu[0])
+		} else {
+			return ("Sintaks tidak sesuai")
+		}
 	} else if ValidateAddDatabase(text) != "notFound" {
 		fmt.Println(ValidateAddDatabase(text))
 		return AddDatabase(text, pertanyaan)

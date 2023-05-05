@@ -186,7 +186,7 @@ func FindResult(operand []string, angka []float64) float64 {
 	}
 }
 
-func Calculator(text string) string{
+func Calculator(text string) string {
 	operand := []string{}
 	angka := []string{}
 	var temp string
@@ -231,7 +231,7 @@ func Calculator(text string) string{
 	// fmt.Println(angkaFloat)
 
 	var result = FindResult(operand, angkaFloat)
-	if result == -999999{
+	if result == -999999 {
 		return "Sintaks tidak sesuai"
 	}
 	fmt.Println("Hasilnya adalah", result)
@@ -240,10 +240,10 @@ func Calculator(text string) string{
 
 func FindPrefixCalculator(text string) string {
 	knowledge_base := map[string]string{
-		"Berapa hasil (.*)":    "X",
+		"[B|b]erapa (.*)":      "X",
 		"(.*) hasilnya adalah": "X",
 		"(.*) berapa hasilnya": "X",
-		"Hasil dari (.*)":      "X",
+		"[H|h]asil (.*)":       "X",
 		"(.*)?":                "X",
 	}
 	notFound := "notFound"
