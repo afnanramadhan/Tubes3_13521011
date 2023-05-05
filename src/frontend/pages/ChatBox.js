@@ -24,8 +24,6 @@ export function ChatBox() {
       if (dataa){
         setBotMessage([...botMessage, { sender: 'me', dataa }]);
         bot.push(dataa);
-        console.log(botMessage);
-        console.log(message);
       }
     }
   };
