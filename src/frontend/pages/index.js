@@ -1,31 +1,8 @@
-// import Head from 'next/head'
-// import { SideBar } from "./SideBar";
-// import { TextBox } from './TextBox';
-// import styles from '../styles/Home.module.css';
-
-// export default function Home() {
-//   return (
-//     <div>
-//       <Head>
-//         <title>Halaman Utama</title>
-//         <link rel="icon" href="/favicon.ico" />
-//         <style>{`
-//           body {
-//             background-color: #393E46;
-//           }
-//         `}</style>
-//       </Head>
-//       <TextBox />
-//       <SideBar />
-//     </div>
-//   )
-// }
-
-
 import Head from 'next/head';
 import { SideBar } from "./SideBar";
-import { TextBox } from './TextBox';
 import styles from '../styles/Home.module.css';
+import { ChatBox } from './ChatBox';
+// import { ChatBox } from './ChatBox';
 
 export default function Home() {
   return (
@@ -45,14 +22,11 @@ export default function Home() {
         <SideBar />
       </div>
       <div className={`${styles.column} ${styles['home']}`}>
-        <div className={styles['home-atas']}>
-        </div>
-        <div className={styles['home-bawah']}>
-          <TextBox />
+        <div className={styles.bottomBarContainer}>
+          <ChatBox />
+          {/* <TextBox /> */}
         </div>
       </div>
-      {/* <div className={`${styles.column} ${styles['home-bawah']}`}></div> */}
     </div>
   );
 }
-
