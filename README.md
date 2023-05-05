@@ -65,6 +65,6 @@ Give credit here.
 |---|---|
 |Afnan Edsa|13521011|
 |Laila Bilbina|13521016|
-|Syarifa Dwi P.|13521125|
+|Syarifa Dwi P.|13521018|
 
 
