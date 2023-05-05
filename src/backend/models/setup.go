@@ -14,6 +14,13 @@ type Data struct {
 	Jawaban   string `gorm:"type:varchar(255)" json:"jawaban"`
 }
 
+type History struct {
+	Id_history int64 `gorm:"primaryKey" json:"id_history"`
+	Page_history int64 `gorm:"type:int(11)" json:"page_history"`
+	Pertanyaan string `gorm:"type:varchar(255)" json:"pertanyaan"`
+	Jawaban   string `gorm:"type:varchar(255)" json:"jawaban"`
+}
+
 var DB *gorm.DB
 
 func getEnv(key string) string {

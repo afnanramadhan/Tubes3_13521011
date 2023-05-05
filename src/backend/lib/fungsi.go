@@ -1,7 +1,6 @@
 package lib
 
 import (
-	// "backend/controller"
 	"fmt"
 	"log"
 	"math"
@@ -12,14 +11,13 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
-	"github.com/texttheater/golang-levenshtein/levenshtein"
 )
 
 func SearchHighestPercentage(source string, listPertanyaan []string) (float64, int) {
 	var highest float64
 	var index int
 	for i := 0; i < len(listPertanyaan); i++ {
-		distance := levenshtein.DistanceForStrings([]rune(source), []rune(listPertanyaan[i]), levenshtein.DefaultOptions)
+		distance := Levenshtein([]rune(source), []rune(listPertanyaan[i]))
 		maxx := math.Max(float64(len(source)), float64(len(listPertanyaan[i])))
 		percentage := 100 - (float64(distance) / maxx * 100)
 		if percentage > highest {
@@ -33,7 +31,7 @@ func SearchHighestPercentage(source string, listPertanyaan []string) (float64, i
 func SearchSimilarQuestion(source string, listPertanyaan []string) []int {
 	var index []int
 	for i := 0; i < len(listPertanyaan); i++ {
-		distance := levenshtein.DistanceForStrings([]rune(source), []rune(listPertanyaan[i]), levenshtein.DefaultOptions)
+		distance := Levenshtein([]rune(source), []rune(listPertanyaan[i]))
 		maxx := math.Max(float64(len(source)), float64(len(listPertanyaan[i])))
 		percentage := 100 - (float64(distance) / maxx * 100)
 		if percentage > 40 {
@@ -70,6 +68,44 @@ func findBM(text string, listPertanyaan []string) int {
 		}
 	}
 	return index
+}
+
+func Levenshtein(str1, str2 []rune) int {
+	s1len := len(str1)
+	s2len := len(str2)
+	column := make([]int, len(str1)+1)
+
+	for y := 1; y <= s1len; y++ {
+		column[y] = y
+	}
+	for x := 1; x <= s2len; x++ {
+		column[0] = x
+		lastkey := x - 1
+		for y := 1; y <= s1len; y++ {
+			oldkey := column[y]
+			var incr int
+			if str1[y-1] != str2[x-1] {
+				incr = 1
+			}
+
+			column[y] = Min(column[y]+1, column[y-1]+1, lastkey+incr)
+			lastkey = oldkey
+		}
+	}
+	return column[s1len]
+}
+
+func Min(a, b, c int) int {
+	if a < b {
+		if a < c {
+			return a
+		}
+	} else {
+		if b < c {
+			return b
+		}
+	}
+	return c
 }
 
 func Utama(text string, val bool) string {
@@ -146,7 +182,6 @@ func Utama(text string, val bool) string {
 						retMirip += rows[mirip[i]].Pertanyaan + " ?"
 					} else {
 						retMirip += rows[mirip[i]].Pertanyaan + ", "
-
 					}
 				}
 				fmt.Println(retMirip)
