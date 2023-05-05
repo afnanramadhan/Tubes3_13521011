@@ -7,37 +7,12 @@ import (
 	"os"
 	"regexp"
 
-	"backend/models"
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	"github.com/texttheater/golang-levenshtein/levenshtein"
 )
-
-var db *sql.DB
-
-func GetAllData() []models.Data {
-	var data []models.Data
-
-	rows, _ := db.Query("SELECT * FROM data")
-
-	defer rows.Close()
-	for rows.Next() {
-		var dataa models.Data
-		rows.Scan(&dataa.Id_data, &dataa.Pertanyaan, &dataa.Jawaban)
-		data = append(data, dataa)
-	}
-
-	return data
-}
-func GetPertanyaan(data []models.Data) []string {
-	var pertanyaan []string
-	for i := 0; i < len(data); i++ {
-		pertanyaan = append(pertanyaan, data[i].Pertanyaan)
-	}
-	return pertanyaan
-}
 
 func SearchHighestPercentage(source string, listPertanyaan []string) (float64, int) {
 	var highest float64
@@ -140,14 +115,15 @@ func Utama(text string) string {
 		fmt.Println(hasilCalcu[0])
 		fmt.Println(Calculator(hasilCalcu[0]))
 		return Calculator(hasilCalcu[0])
-	}else if AddDatabase(text) != "notFound" {
-		fmt.Println(AddDatabase(text))
-		return AddDatabase(text)
-	} else if RemoveDatabase(text) != "notFound" {
-		fmt.Println(RemoveDatabase(text))
-		return RemoveDatabase(text)
+	} else if ValidateAddDatabase(text) != "notFound" {
+		fmt.Println(ValidateAddDatabase(text))
+		return AddDatabase(text, pertanyaan)
+	} else if ValidateRemoveDatabase(text) != "notFound" {
+		fmt.Println(ValidateRemoveDatabase(text))
+		return RemoveDatabase(text, pertanyaan)
 	} else {
 		fmt.Println("ini pertanyaan")
+		text = FindPrefixQ(text)
 		var retVal int
 		if true {
 			retVal = findKMP(text, pertanyaan)
